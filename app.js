@@ -6,11 +6,13 @@
 var express = require('express')
   , routes = require('./routes');
 
-var app = module.exports = express.createServer();
+var app = express.createServer();
 
 // Configuration
 
 app.configure(function(){
+  app.set('view options', { pretty: true }); 
+  app.set('view options', {layout: false})
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
