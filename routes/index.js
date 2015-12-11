@@ -1,25 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var session = require('../source/session-utils.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Kavice' });
-});
-
-/* GET home page. */
-router.get('/index', function(req, res, next) {
-  res.render('index', { title: 'Kavice' });
-});
-
-
-/* GET home page. */
-router.get('/1', function(req, res, next) {
-  res.render('index', { title: '1 Kavice' });
-});
-
-/* GET home page. */
-router.get('/2', function(req, res, next) {
-  res.render('index', { title: '2 Kavice' });
+	console.log(req.session);
+	session.check(req.session, function(sessionValid){
+		if(sessionValid){
+			res.redirect('/dashboard');
+		} else {
+			res.render('index',{title: 'Kavice'});
+		}
+	});
 });
 
 module.exports = router;

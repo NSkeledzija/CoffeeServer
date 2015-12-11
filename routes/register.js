@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 
 /* POST registration page. */
 router.post('/', function(req, res, next){
-	database.addUser({FirstName:req.body.firstName, LastName:req.body.lastName, Email:req.body.email, Password:req.body.password}, function(error){
+	database.addUser({firstName:req.body.firstName, lastName:req.body.lastName, email:req.body.email, password:req.body.password}, function(error){
 		if(error){
 			if(error.userAlreadyRegistered){
 				console.log('This email is already registered!');

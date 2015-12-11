@@ -9,11 +9,11 @@ router.get('/', function(req, res, next) {
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
-	console.log(req.body.email);
 	database.findUser(req.body.email, function(user){
 		if(user){
-			if(req.body.password === user.Password){
+			if(req.body.password === user.password){
 				console.log('OMG login works!');
+				req.session.user = user;
 				res.redirect('/dashboard');
 			} else {
 				console.log('Fake login!');

@@ -33,7 +33,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(sessions({
   cookieName: 'session',
-  secret: 'apsodkpoaskdpoajpidjiewjri1oiu4080r9udsapxos3',
+  secret: 'pasodkpasdasdas',
+  duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
+  activeDuration: 1000 * 60 * 5, 
 }));
 
 app.use('/login', login);
@@ -41,6 +43,7 @@ app.use('/register', register);
 app.use('/dashboard', dashboard);
 app.use('/', index);
 
+/*
 var me = new user('Niksa','Skeledzija','peder@ga.com','gej');
 dbAccess.addUser(me,function(error){
   if(error){
@@ -54,7 +57,7 @@ dbAccess.addUser(me,function(error){
 
 dbAccess.findUser(me.Email,function(user){
   console.log(user);
-});
+});*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

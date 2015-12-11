@@ -13,6 +13,7 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "sqlite3": "^3.1.1"
+    "sqlite3": "^3.1.1",
+    "client-sessions": "~0.7.0"
   }
 }
