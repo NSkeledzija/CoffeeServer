@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var sessions = require('client-sessions');
 
 var index = require('./routes/index');
 var login = require('./routes/login');
@@ -13,6 +14,8 @@ var users = require('./routes/users');
 
 var app = express();
 
+var dbAccess = require('./source/database-access');
+var user = require('./source/user');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,10 +31,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(sessions({
+  cookieName: 'session',
+  secret: 'apsodkpoaskdpoajpidjiewjri1oiu4080r9udsapxos3',
+}));
+
 app.use('/login', login);
 app.use('/register', register);
 app.use('/dashboard', dashboard);
 app.use('/', index);
+
+var me = new user('Niksa','Skeledzija','peder@ga.com','gej');
+dbAccess.addUser(me,function(error){
+  if(error){
+    if(error.userAlreadyRegistered){
+      console.log('Fuck you user!');
+    }
+  } else {
+    console.log('Successfully added user: ' + me.Email);
+  }
+});
+
+dbAccess.findUser(me.Email,function(user){
+  console.log(user);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
