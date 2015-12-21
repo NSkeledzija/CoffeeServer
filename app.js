@@ -1,3 +1,7 @@
+/* Coffee server, 2015 */
+
+// Node module dependencies
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,16 +10,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sessions = require('client-sessions');
 
+// Custom modules
+var sessionUtils = require('./custom_modules/session-utils');
+
+// Routes
 var index = require('./routes/index');
 var login = require('./routes/login');
+var logout = require('./routes/logout');
 var register = require('./routes/register');
 var dashboard = require('./routes/dashboard');
 var users = require('./routes/users');
 
 var app = express();
-
-var dbAccess = require('./source/database-access');
-var user = require('./source/user');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,30 +40,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(sessions({
   cookieName: 'session',
   secret: 'pasodkpasdasdas',
-  duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
+  duration: 1 * 60 * 60 * 1000, // how long the session will stay valid in ms
   activeDuration: 1000 * 60 * 5, 
 }));
 
+app.use(sessionUtils.processSession);
+
 app.use('/login', login);
+app.use('/logout', logout);
 app.use('/register', register);
 app.use('/dashboard', dashboard);
 app.use('/', index);
-
-/*
-var me = new user('Niksa','Skeledzija','peder@ga.com','gej');
-dbAccess.addUser(me,function(error){
-  if(error){
-    if(error.userAlreadyRegistered){
-      console.log('Fuck you user!');
-    }
-  } else {
-    console.log('Successfully added user: ' + me.Email);
-  }
-});
-
-dbAccess.findUser(me.Email,function(user){
-  console.log(user);
-});*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

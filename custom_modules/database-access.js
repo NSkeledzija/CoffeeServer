@@ -3,27 +3,22 @@ var sqlite3 = require('sqlite3');
 exports.addUser = function (user, callback){
 	var db = new sqlite3.Database('./database',function(){
 		//console.log(user);
-		// Check if the user already exists in the database
-		var searchQuery = 'SELECT email FROM users WHERE email = \'' + user.email + '\'';
-		//console.log(searchQuery);
-		db.get(searchQuery, function(err, row){
-			if(row === undefined){
+		exports.findUser(user.email, function(knownUser){
+			if(!knownUser){
 				var insertQuery = 'INSERT INTO users (FirstName, LastName, Email, Password) VALUES (\'' + user.firstName + '\',\'' 
 					+ user.lastName + '\',\'' + user.email + '\',\'' + user.password + '\')';
 				//console.log(insertQuery);
-				
 				db.run(insertQuery, function(err){
 					if(!err){
-						if(!(callback == undefined))
-							callback(null);
-					}else{
-						if(!(callback == undefined))
-							callback({databaseError:true});
+						callback(null);
+					} else {
+						var err = {couldNotInsertUser: true};
+						callback(err);
 					}
 				});
 			}else{
-				if(!(callback == undefined))
-					callback({userAlreadyRegistered:true});
+				var err = {alreadyRegistered: true};
+				callback(err);
 			}
 		});
 	});

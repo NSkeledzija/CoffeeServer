@@ -1,26 +1,25 @@
 var express = require('express');
 var router = express.Router();
-var database = require('../source/database-access')
+var database = require('../custom_modules/database-access');
+var bcrypt = require('bcrypt-nodejs');
 
-/* GET home page. */
+/* GET login page. */
 router.get('/', function(req, res, next) {
   res.render('login', { title: 'Kavice' });
 });
 
-/* GET home page. */
+/* POST login form */
 router.post('/', function(req, res, next) {
 	database.findUser(req.body.email, function(user){
 		if(user){
-			if(req.body.password === user.password){
-				console.log('OMG login works!');
+			if(bcrypt.compareSync(req.body.password, user.password)){
 				req.session.user = user;
 				res.redirect('/dashboard');
 			} else {
-				console.log('Fake login!');
-				res.redirect('/login');
+				res.render('login',{error: "Invalid user name or password!"});
 			}
 		} else {
-			console.log('User not found!');
+			res.render('login',{error: "Invalid user name or password!"});
 		}
 	});
 });

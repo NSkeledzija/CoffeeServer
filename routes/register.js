@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var database = require('../source/database-access');
+var database = require('../custom_modules/database-access');
+var bcrypt = require('bcrypt-nodejs');
 
 /* GET registration page. */
 router.get('/', function(req, res, next) {
@@ -9,18 +10,19 @@ router.get('/', function(req, res, next) {
 
 /* POST registration page. */
 router.post('/', function(req, res, next){
-	database.addUser({firstName:req.body.firstName, lastName:req.body.lastName, email:req.body.email, password:req.body.password}, function(error){
-		if(error){
-			if(error.userAlreadyRegistered){
-				console.log('This email is already registered!');
-				res.redirect('/register');
-			} else {
-				console.log('Database error!');
-				res.redirect('/register');
-			}
-		}else{
-			console.log('Successfully added user: ' + req.body.email);
+	var passwordHash = bcrypt.hashSync(req.body.password);
+	console.log(req.body.password);
+	console.log(passwordHash);
+	
+	var user = {firstName:req.body.firstName, lastName:req.body.lastName, email:req.body.email, password:passwordHash}; 
+	database.addUser(user,function(err){
+		if(!err){
+			req.session.user = user;
 			res.redirect('/dashboard');
+		} else if(err.alreadyRegistered){
+			res.render('register', {title: 'Kavice', error: 'The email entered is already registered. Please use a different email'});
+		}else{
+			res.render('register', {title: 'Kavice', error: 'Database insertion failed. Contact admin.'});
 		}
 	});	
 });
