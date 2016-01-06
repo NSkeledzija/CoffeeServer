@@ -9,17 +9,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sessions = require('client-sessions');
+var autoroute = require('express-autoroute');
 
 // Custom modules
 var sessionUtils = require('./custom_modules/session-utils');
-
-// Routes
-var index = require('./routes/index');
-var login = require('./routes/login');
-var logout = require('./routes/logout');
-var register = require('./routes/register');
-var dashboard = require('./routes/dashboard');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -31,7 +24,7 @@ app.locals.pretty = true;
 
  // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-//app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -39,18 +32,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(sessions({
   cookieName: 'session',
-  secret: 'pasodkpasdasdas',
+  secret: '%RF&G(UJIpkpok(09',
   duration: 1 * 60 * 60 * 1000, // how long the session will stay valid in ms
   activeDuration: 1000 * 60 * 5, 
 }));
 
 app.use(sessionUtils.processSession);
 
-app.use('/login', login);
-app.use('/logout', logout);
-app.use('/register', register);
-app.use('/dashboard', dashboard);
-app.use('/', index);
+autoroute(app,  {throwErrors: false, routesDir: __dirname + '/routes'});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,15 +1,23 @@
 var express = require('express');
-var router = express.Router();
 var database = require('../custom_modules/database-access');
 var bcrypt = require('bcrypt-nodejs');
 
+module.exports.autoroute = {
+	get: {
+		'/register' : get
+	}, 
+	post: {
+		'/register' : post
+	}
+};
+
 /* GET registration page. */
-router.get('/', function(req, res, next) {
+function get(req, res) {
 	res.render('register', { title: 'Kavice' });
-});
+}
 
 /* POST registration page. */
-router.post('/', function(req, res, next){
+function post(req, res){
 	var passwordHash = bcrypt.hashSync(req.body.password);
 	console.log(req.body.password);
 	console.log(passwordHash);
@@ -25,6 +33,4 @@ router.post('/', function(req, res, next){
 			res.render('register', {title: 'Kavice', error: 'Database insertion failed. Contact admin.'});
 		}
 	});	
-});
-
-module.exports = router;
+}

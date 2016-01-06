@@ -1,10 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
+module.exports.autoroute = {
+	get: {
+		'/logout' : get
+	}
+}
+
 /* GET logout page. */
-router.get('/', function(req, res, next) {
+function get(req,res) {
   req.session.destroy();
   res.redirect('/login');
-});
-
-module.exports = router;
+}
