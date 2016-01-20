@@ -31,7 +31,11 @@ html
 			if(error)
 				p #{error}
 			if(!error)
-				p Welcome to your dashboard #{User}
+				if(User)
+					p Welcome to your dashboard 
+						b #{User}!
+				if(message)	
+					p #{message}
 				block content
 			// /.container-fluid
 	// Placed at the end of the document so the pages load faster

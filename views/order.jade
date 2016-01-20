@@ -2,4 +2,12 @@ extends dashboard.jade
 
 block content
 	br
-	p You can place an order here!
+	.container(style='max-width: 400px')
+		form.form-signin(action='/order', method='post')
+			label.sr-only(for='inputTango') Tango
+			input#inputTango.form-control(type='number', min ='0', max = '100', step = '10', name='tango', placeholder='Tango', required='', autofocus='')
+			label.sr-only(for='inputSymphonie') Symphonie
+			input#inputSymphonie.form-control(type='number', min ='0', max = '100', step = '10', name='symphonie', placeholder='Symphonie', required='')
+			label.sr-only(for='inputCulto') Culto
+			input#inputCulto.form-control(type='number', min ='0', max = '100', step = '10' name='culto', placeholder='Culto', required='', autofocus='')
+			button.btn-custom.btn.btn-lg.btn-primary.btn-block(type='submit') Place order
